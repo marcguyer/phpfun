@@ -49,7 +49,7 @@
  *
  * html_entity_decode() would un-escape these strings once.
  *
- * if (strcmp($input, html_entity_decode($input)) === 0), the string is already un-escaped.
+ * if (strcmp(html_entity_decode($input), $input) === 0), the string is already un-escaped.
  *
  * Use the following pseudocode
  */
