@@ -61,7 +61,7 @@ class Parser
     {
         //test whether the input is html escaped or not here
         //strcmp would be best. == or === is acceptable.
-        return strcmp($input, html_entity_decode($input) === 0);
+        return strcmp(html_entity_decode($input), $input) === 0;
     }
 
     //Task 2: Write a method that will decode a string.
@@ -70,7 +70,6 @@ class Parser
     {
         $output = html_entity_decode($input);
 
-        //should use recursive method
         if (!$this->checkDecoded($output)) {
             $output = $this->htmlDecode($output);
         }
@@ -132,6 +131,7 @@ class Parser
         foreach ($array as $value) {
             $creationDate = $this->locate($value, "creation_date");
             $rawText = $this->locate($value, "text");
+
             $text = $this->htmlDecode($rawText);
 
             $output[] = ["creation_date" => $creationDate, "text" => $text];
