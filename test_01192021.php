@@ -77,7 +77,7 @@ class Parser
         return $string;
     }
 
-    //Task 4: write the method to sort the data.
+    //Task 4: write the method to sort the data by create date.
     private static function sortDate(array $a, array $b): int
     {
         //a sorter to put inside the usort. This should return -1, 0, 1
@@ -92,9 +92,6 @@ class Parser
         //convert input to json
         $array = json_decode($input, true);
 
-        //sort the array
-        usort($array, [$this, "sortDate"]);
-
         foreach ($array as $value) {
             //parse the results
             $creationDate = "";
@@ -102,6 +99,9 @@ class Parser
 
             $output[] = ["creation_date" => $creationDate, "text" => $text];
         }
+
+        //sort the array
+        usort($output, [$this, "sortDate"]);
         return $output;
     }
 }
@@ -112,6 +112,7 @@ $input =
       "text":"American Estate &amp;amp;amp;amp; Trust is a great company to work.",
       "creation_date":"2020-10-01 00:00:00"
    },
+   
    {
       "id":3,
       "data":{
