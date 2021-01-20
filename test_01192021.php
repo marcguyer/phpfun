@@ -53,35 +53,72 @@
  *
  * Use the following pseudocode
  */
+
 class Parser
 {
     //Task 1: write a method that will check whether a string is properly decoded or not.
     private function checkDecoded(string $input): bool
     {
         //test whether the input is html escaped or not here
-        return $bool;
+        //strcmp would be best. == or === is acceptable.
+        return strcmp($input, html_entity_decode($input) === 0);
     }
 
     //Task 2: Write a method that will decode a string.
     // make it sure that it is fully decoded even if it is encoded multiple times.
     private function htmlDecode(string $input): string
     {
-        //do the entity decoding operation and output string
-        //it can be escaped several times.
+        $output = html_entity_decode($input);
+
+        //should use recursive method
+        if (!$this->checkDecoded($output)) {
+            $output = $this->htmlDecode($output);
+        }
+
         return $output;
     }
 
     //Task 3: find the key value from an array with uncertain format.
     private function locate(array $array, string $field): string
     {
-        return $string;
+        if (array_key_exists($field, $array)) {
+            return is_string($array[$field])? $array[$field]: "";
+        }
+
+        //should go inside array recursively
+        foreach ($array as $values) {
+            if (is_array($values)) {
+                if ($this->locate($values, $field)) {
+                    return $this->locate($values, $field);
+                }
+            }
+
+            continue;
+        }
+
+        //bonus for failures taken care of
+        return "";
     }
 
     //Task 4: write the method to sort the data by create date.
     private static function sortDate(array $a, array $b): int
     {
-        //a sorter to put inside the usort. This should return -1, 0, 1
-        return $sort;
+        $aValue = $a["creation_date"];
+        $bValue = $b["creation_date"];
+
+        //bonus if DateTime parsing failure is put in.
+        try {
+            $aDate = new DateTime($aValue);
+        } catch (Exception $e) {
+            return 0;
+        }
+        try {
+            $bDate = new DateTime($bValue);
+        } catch (Exception $e) {
+            return 0;
+        }
+
+        return $aDate <=> $bDate;
     }
 
     //Task 5: complete the parser
@@ -93,9 +130,9 @@ class Parser
         $array = json_decode($input, true);
 
         foreach ($array as $value) {
-            //parse the results
-            $creationDate = "";
-            $text = "";
+            $creationDate = $this->locate($value, "creation_date");
+            $rawText = $this->locate($value, "text");
+            $text = $this->htmlDecode($rawText);
 
             $output[] = ["creation_date" => $creationDate, "text" => $text];
         }
